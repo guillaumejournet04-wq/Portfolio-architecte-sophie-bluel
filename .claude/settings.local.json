@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 5 node -e \"const app = require\\('./app'\\)\")",
+      "Bash(gtimeout 5 node -e \"const app = require\\('./app'\\); console.log\\('OK'\\)\")",
+      "Bash(echo \"EXIT_CODE: $?\")",
+      "Bash(node --check app.js)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}
