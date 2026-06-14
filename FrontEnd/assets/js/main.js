@@ -3,13 +3,16 @@
 
 const gallery = document.querySelector(".gallery") // sélectionne l'élément HTML de la galerie pour y ajouter les projets
 const filters = document.querySelector("#filters"); // sélectionne l'élément HTML pour les filtres de catégories
+const modal = document.getElementById("modal"); // sélectionne l'élément HTML du modal pour l'affichage des projets
+const editIcon = document.getElementById("editIcon"); // sélectionne l'élément HTML de l'icône d'édition pour ouvrir le modal  
+const modalClose = document.getElementById("modalClose"); // sélectionne l'élément HTML du bouton de fermeture du modal 
 
 
 function recupererDonnees(url) {
     return fetch(url)
         .then(response => response.json())
 }
-function createFigure(work) {
+function creerFigure(work) {
     const figure = document.createElement("figure") // crée un élément HTML <figure> pour chaque projet
     figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"><figcaption>${work.title}</figcaption>` // ajoute une image et une légende à chaque figure en utilisant les données du projet
     return figure; // retourne l'élément <figure> créé pour le projet
@@ -19,7 +22,7 @@ function viderGallery() {
 }
 function afficherProjets(projets) {
     viderGallery();
-    const figures = projets.map(work => createFigure(work));
+    const figures = projets.map(work => creerFigure(work));
     gallery.append(...figures);
 }
 function creerBoutonTous(works) {
@@ -45,7 +48,18 @@ function afficherFiltres(categories, works) {
         creerBoutonsCategories(category, works); // crée un bouton pour la catégorie
     })
 }
+function ouvrirModale() {
+    modal.classList.add("active");
+}
+function fermerModale() {
+    modal.classList.remove("active");
+}
+function gererModale() {
+    editIcon.addEventListener("click", ouvrirModale);
+    modalClose.addEventListener("click", fermerModale);
+}
 function main() {
+    gererModale();
     Promise.all([
         recupererDonnees("http://localhost:5678/api/works"),
         recupererDonnees("http://localhost:5678/api/categories")
