@@ -36,7 +36,7 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<h2>Mes Projets<img src="./assets/icons/edit.svg" alt="Modifier" class="edit-icon" id="editIcon"></h2>
 		<div id="filters">
 			</div>
 		<div class="gallery">
@@ -56,6 +56,40 @@
 		</form>
 	</section>
 </main>
+
+<div class="modal" id="modal">
+	<div class="modal-content">
+		<img src="./assets/icons/close.svg" alt="Fermer" class="modal-close" id="modalClose">
+
+		<div class="modal-view" id="modalGalleryView">
+			<h3>Galerie photo</h3>
+			<div class="modal-gallery" id="modalGallery">
+			</div>
+			<hr>
+			<button type="button" class="btn-add-photo" id="btnAddPhoto">Ajouter une photo</button>
+		</div>
+
+		<div class="modal-view" id="modalAddView" hidden>
+			<img src="./assets/icons/arrow-left.svg" alt="Retour" class="modal-back" id="modalBack">
+			<h3>Ajout photo</h3>
+			<form id="addPhotoForm">
+				<div class="upload-zone" id="uploadZone">
+					<img src="./assets/icons/picture.svg" alt="" class="upload-icon">
+					<label for="photoInput" class="btn-upload">+ Ajouter photo</label>
+					<input type="file" id="photoInput" name="image" accept="image/png, image/jpeg" hidden>
+					<p class="upload-info">jpg, png : 4mo max</p>
+				</div>
+				<label for="titleInput">Titre</label>
+				<input type="text" name="title" id="titleInput">
+				<label for="categoryInput">Catégorie</label>
+				<select name="category" id="categoryInput">
+					<option value=""></option>
+				</select>
+				<button type="submit" class="btn-validate" id="btnValidate">Valider</button>
+			</form>
+		</div>
+	</div>
+</div>
 
 <footer>
 	<nav>
