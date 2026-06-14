@@ -1,45 +1,57 @@
-let works = [] // crée une variable globale pour stocker les projets récupérés de l'API
-let gallery = document.querySelector(".gallery") // sélectionne l'élément HTML de la galerie pour y ajouter les projets
+// Je pourrait stocker "works" dans une variable globale (let works = []),
+// mais je préfère la passer en paramètre aux fonctions qui en ont besoin pour éviter une variable globale mutable.
 
-fetch("http://localhost:5678/api/works") // envoie une requête HTTP GET à l'URL de l'API
-    .then(response => response.json()) // convertit la réponse brute du serveur en objet JavaScript lisible
-    .then(data => {
-        works = data; // stocke les projets récupérés dans la variable globale "works"
-        works.forEach(work => {
-            const figure = document.createElement("figure") // crée un élément HTML <figure> pour chaque projet
-            figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"><figcaption>${work.title}</figcaption>` // ajoute une image et une légende à chaque figure en utilisant les données du projet
-            gallery.appendChild(figure) // ajoute chaque figure à la galerie sur la page HTML
-        })
-    }); // works = le tableau contenant les 11 projets récupérés
+const gallery = document.querySelector(".gallery") // sélectionne l'élément HTML de la galerie pour y ajouter les projets
+const filters = document.querySelector("#filters"); // sélectionne l'élément HTML pour les filtres de catégories
 
-fetch("http://localhost:5678/api/categories") // envoie une requête HTTP GET à l'URL de l'API pour récupérer les catégories
-    .then(response => response.json()) // convertit la réponse brute du serveur en objet JavaScript lisible
-    .then(categories => {
-        const filters = document.querySelector("#filters"); // crée un élément HTML <div> pour les filtres de catégories")
-        const btnTous = document.createElement("button"); // crée un bouton pour afficher tous les projets
-        btnTous.textContent = "Tous"; // définit le texte du bouton "Tous"
-        filters.appendChild(btnTous); // ajoute le bouton "Tous" à la section des filtres
-        btnTous.addEventListener("click", () => {
-            gallery.innerHTML = ""; // ajoute un écouteur d'événement pour le clic sur le bouton "Tous"
-            works.forEach(work => { // pour chaque projet dans la variable globale "works"
-                const figure = document.createElement("figure"); // crée un élément HTML <figure> pour chaque projet
-                figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"><figcaption>${work.title}</figcaption>`; // ajoute une image et une légende à chaque figure en utilisant les données du projet
-                gallery.appendChild(figure); // ajoute chaque figure à la galerie sur la page HTML
-            })
-        })
-        categories.forEach(category => { // pour chaque catégorie récupérée
-            const btn = document.createElement("button"); // crée un bouton pour la catégorie
-            btn.textContent = category.name; // définit le texte du bouton avec le nom de la catégorie
-            filters.appendChild(btn); // ajoute le bouton de la catégorie à la section des filtres  
-            btn.addEventListener("click", () => {
-                gallery.innerHTML = ""; // ajoute un écouteur d'événement pour le clic sur le bouton de la catégorie
-                works.forEach(work => {
-                    if (work.categoryId === category.id) {
-                        const figure = document.createElement("figure");
-                        figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"><figcaption>${work.title}</figcaption>`;
-                        gallery.appendChild(figure);
-                    }
-                })
-            })
-        })
-    }); // categories = le tableau contenant les 3 catégories récupérées + le boutton "Tous" ajouté pour afficher tous les projets
+
+function recupererDonnees(url) {
+    return fetch(url)
+        .then(response => response.json())
+}
+function createFigure(work) {
+    const figure = document.createElement("figure") // crée un élément HTML <figure> pour chaque projet
+    figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"><figcaption>${work.title}</figcaption>` // ajoute une image et une légende à chaque figure en utilisant les données du projet
+    return figure; // retourne l'élément <figure> créé pour le projet
+}
+function viderGallery() {
+    gallery.innerHTML = ""; // vide le contenu de la galerie en supprimant tous les éléments enfants
+}
+function afficherProjets(projets) {
+    viderGallery();
+    const figures = projets.map(work => createFigure(work));
+    gallery.append(...figures);
+}
+function creerBoutonTous(works) {
+    const btnTous = document.createElement("button"); // crée un bouton pour afficher tous les projets
+    btnTous.textContent = "Tous"; // définit le texte du bouton "Tous"
+    filters.appendChild(btnTous); // ajoute le bouton "Tous" à la section des filtres
+    btnTous.addEventListener("click", () => {
+        afficherProjets(works); // ajoute un écouteur d'événement pour le clic sur le bouton "Tous" pour afficher tous les projets
+    })
+}
+function creerBoutonsCategories(category, works) {
+    const btn = document.createElement("button"); // crée un bouton pour chaque catégorie
+    btn.textContent = category.name; // définit le texte du bouton avec le nom de la catégorie
+    filters.appendChild(btn); // ajoute le bouton de la catégorie à la section des filtres  
+    btn.addEventListener("click", () => {
+        const projetsFiltres = works.filter(work => work.categoryId === category.id);
+        afficherProjets(projetsFiltres);
+    })
+}
+function afficherFiltres(categories, works) {
+    creerBoutonTous(works); // crée le bouton "Tous" pour afficher tous les projets
+    categories.forEach(category => { // pour chaque catégorie récupérée
+        creerBoutonsCategories(category, works); // crée un bouton pour la catégorie
+    })
+}
+function main() {
+    Promise.all([
+        recupererDonnees("http://localhost:5678/api/works"),
+        recupererDonnees("http://localhost:5678/api/categories")
+    ]).then(([works, categories]) => {
+        afficherProjets(works);
+        afficherFiltres(categories, works);
+    })
+}
+document.addEventListener("DOMContentLoaded", main)
