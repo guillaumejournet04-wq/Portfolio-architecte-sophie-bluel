@@ -9,8 +9,8 @@ const modalClose = document.getElementById("modalClose"); // sélectionne l'él�
 
 
 function recupererDonnees(url) {
-    return fetch(url)
-        .then(response => response.json())
+    return fetch(url) // envoie une requête à l'URL donnée
+        .then(response => response.json()) // convertit la réponse en JSON et retourne le résultat
 }
 function creerFigure(work) {
     const figure = document.createElement("figure") // crée un élément HTML <figure> pour chaque projet
@@ -49,23 +49,23 @@ function afficherFiltres(categories, works) {
     })
 }
 function ouvrirModale() {
-    modal.classList.add("active");
+    modal.classList.add("active"); // affiche la modale en lui ajoutant la classe "active"
 }
 function fermerModale() {
-    modal.classList.remove("active");
+    modal.classList.remove("active"); // cache la modale en lui retirant la classe "active"
 }
 function gererModale() {
-    editIcon.addEventListener("click", ouvrirModale);
-    modalClose.addEventListener("click", fermerModale);
+    editIcon.addEventListener("click", ouvrirModale); // ouvre la modale au clic sur l'icône "modifier"
+    modalClose.addEventListener("click", fermerModale); // ferme la modale au clic sur la croix
 }
 function main() {
-    gererModale();
+    gererModale(); // met en place les écouteurs de la modale, sans attendre les données
     Promise.all([
         recupererDonnees("http://localhost:5678/api/works"),
         recupererDonnees("http://localhost:5678/api/categories")
-    ]).then(([works, categories]) => {
-        afficherProjets(works);
-        afficherFiltres(categories, works);
+    ]).then(([works, categories]) => { // une fois les projets et catégories récupérés
+        afficherProjets(works); // affiche les projets dans la galerie
+        afficherFiltres(categories, works); // crée les boutons de filtre par catégorie
     })
 }
-document.addEventListener("DOMContentLoaded", main)
+document.addEventListener("DOMContentLoaded", main) // lance main() une fois le HTML chargé
