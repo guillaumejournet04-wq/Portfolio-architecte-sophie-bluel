@@ -9,6 +9,7 @@ const modalClose = document.getElementById("modalClose"); // sélectionne l'él�
 const loginLink = document.getElementById("loginLink");
 const contactForm = document.getElementById("contactForm");
 const confirmationMessage = document.getElementById("confirmationMessage");
+const editBanner = document.getElementById("editBanner");
 
 
 
@@ -71,6 +72,7 @@ function activerModeEdition() {
     editIcon.removeAttribute("hidden"); // affiche l'icône "modifier"
     loginLink.textContent = "logout"; // remplace le texte "login" par "logout"
     loginLink.addEventListener("click", deconnecterUtilisateur); // déconnecte l'utilisateur au clic
+    editBanner.removeAttribute("hidden"); // affiche la bannière "Mode édition"
 }
 
 function gererConnexion() {
@@ -103,6 +105,10 @@ function gererSoumissionContact(event) {
     }
     contactForm.reset();
     afficherConfirmation();
+}
+
+function gererFormulaireContact() {
+    contactForm.addEventListener("submit", gererSoumissionContact);
 }
 
 function main() {

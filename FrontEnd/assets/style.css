@@ -54,6 +54,21 @@ a {
 a:active {
 	color: #000;
 }
+.edit-banner:not([hidden]) {
+	display: flex;
+}
+.edit-banner {
+	width: 100vw;
+	margin-left: calc(50% - 50vw);
+	height: 59px;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	background-color: #000;
+	color: #fff;
+	font-family: 'Work Sans';
+	font-size: 14px;
+}
 body {
 	max-width: 1140px;
 	margin:auto;
