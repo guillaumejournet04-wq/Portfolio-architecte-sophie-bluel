@@ -29,11 +29,12 @@
     <main>
         <section id="login">
             <h2>Log In</h2>
-            <form action="#" method="post">
+            <form action="#" method="post" id="loginForm">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email">
                 <label for="password">Mot de passe</label>
                 <input type="password" name="password" id="password">
+                <p class="error-message" id="errorMessage"></p>
                 <input type="submit" value="Se connecter">
                 <a href="#">Mot de passe oublié ?</a>
             </form>
