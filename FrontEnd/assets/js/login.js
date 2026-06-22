@@ -1,5 +1,8 @@
+const API_URL = "http://localhost:5678/api";
+const LOGIN_URL = `${API_URL}/users/login`;
+
 async function connecterUtilisateur(email, password) {
-    const response = await fetch("http://localhost:5678/api/users/login", { // envoie les identifiants au serveur
+    const response = await fetch(LOGIN_URL, { // envoie les identifiants au serveur
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })

@@ -6,8 +6,11 @@ const filters = document.querySelector("#filters"); // sélectionne l'élément 
 const modal = document.getElementById("modal"); // sélectionne l'élément HTML du modal pour l'affichage des projets
 const editIcon = document.getElementById("editIcon"); // sélectionne l'élément HTML de l'icône d'édition pour ouvrir le modal  
 const contactForm = document.getElementById("contactForm"); // sélectionne le formulaire de contact
-const confirmationMessage = document.getElementById("confirmationMessage"); // sélectionne le message de confirmation d'envoi
 const contactError = document.getElementById("contactError"); // sélectionne le message d'erreur du formulaire de contact
+const API_URL = "http://localhost:5678/api";
+const WORKS_URL = `${API_URL}/works`;
+const CATEGORIES_URL = `${API_URL}/categories`;
+    
 
 async function recupererDonnees(url) {
     const response = await fetch(url); // attend la réponse du serveur
@@ -142,8 +145,8 @@ async function main() {
     gererModale(); // met en place les écouteurs de la modale, sans attendre les données
     gererFormulaireContact(); // met en place l'écouteur du formulaire de contact
     const [works, categories] = await Promise.all([
-        recupererDonnees("http://localhost:5678/api/works"), // récupère la liste des projets
-        recupererDonnees("http://localhost:5678/api/categories") // récupère la liste des catégories
+        recupererDonnees(WORKS_URL), // récupère la liste des projets
+        recupererDonnees(CATEGORIES_URL) // récupère la liste des catégories
     ]); // attend que les deux requêtes soient terminées
     afficherProjets(works); // affiche les projets dans la galerie
     afficherFiltres(categories, works); // crée les boutons de filtre par catégorie
