@@ -439,4 +439,9 @@ footer nav ul {
 	font-weight: 700;
 	margin-top: 1em;
 }
+#contact .contact-error {
+	color: #B1663C;
+	font-weight: 700;
+	margin-top: 1em;
+}
 

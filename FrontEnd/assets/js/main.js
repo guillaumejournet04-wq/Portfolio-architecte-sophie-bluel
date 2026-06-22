@@ -5,17 +5,13 @@ const gallery = document.querySelector(".gallery") // sélectionne l'élément H
 const filters = document.querySelector("#filters"); // sélectionne l'élément HTML pour les filtres de catégories
 const modal = document.getElementById("modal"); // sélectionne l'élément HTML du modal pour l'affichage des projets
 const editIcon = document.getElementById("editIcon"); // sélectionne l'élément HTML de l'icône d'édition pour ouvrir le modal  
-const modalClose = document.getElementById("modalClose"); // sélectionne l'élément HTML du bouton de fermeture du modal 
-const loginLink = document.getElementById("loginLink");
-const contactForm = document.getElementById("contactForm");
-const confirmationMessage = document.getElementById("confirmationMessage");
-const editBanner = document.getElementById("editBanner");
+const contactForm = document.getElementById("contactForm"); // sélectionne le formulaire de contact
+const confirmationMessage = document.getElementById("confirmationMessage"); // sélectionne le message de confirmation d'envoi
+const contactError = document.getElementById("contactError"); // sélectionne le message d'erreur du formulaire de contact
 
-
-
-function recupererDonnees(url) {
-    return fetch(url) // envoie une requête à l'URL donnée
-        .then(response => response.json()) // convertit la réponse en JSON et retourne le résultat
+async function recupererDonnees(url) {
+    const response = await fetch(url); // attend la réponse du serveur
+    return response.json(); // convertit la réponse en JSON
 }
 
 function creerFigure(work) {
@@ -29,9 +25,9 @@ function viderGallery() {
 }
 
 function afficherProjets(projets) {
-    viderGallery();
-    const figures = projets.map(work => creerFigure(work));
-    gallery.append(...figures);
+    viderGallery(); // on repart d'une galerie vide avant d'afficher la nouvelle liste
+    const figures = projets.map(work => creerFigure(work)); // crée une <figure> par projet
+    gallery.append(...figures); // ajoute toutes les figures dans la galerie en une fois
 }
 
 function creerBoutonTous(works) {
@@ -69,6 +65,8 @@ function deconnecterUtilisateur(event) {
     window.location.href = "index.html"; // recharge la page en mode visiteur
 }
 function activerModeEdition() {
+    const loginLink = document.getElementById("loginLink"); // sélectionne le lien "login"/"logout" du menu
+    const editBanner = document.getElementById("editBanner"); // sélectionne la bannière "Mode édition"
     editIcon.removeAttribute("hidden"); // affiche l'icône "modifier"
     loginLink.textContent = "logout"; // remplace le texte "login" par "logout"
     loginLink.addEventListener("click", deconnecterUtilisateur); // déconnecte l'utilisateur au clic
@@ -90,38 +88,65 @@ function fermerModale() {
 }
 
 function gererModale() {
+    const modalClose = document.getElementById("modalClose"); // sélectionne l'élément HTML du bouton de fermeture du modal 
     editIcon.addEventListener("click", ouvrirModale); // ouvre la modale au clic sur l'icône "modifier"
     modalClose.addEventListener("click", fermerModale); // ferme la modale au clic sur la croix
+    modal.addEventListener("click", fermerModaleExterieur); // ferme la modale au clic en dehors d'elle
+}
+
+function fermerModaleExterieur(event) {
+    if (event.target === modal) {
+        fermerModale();
+    }
 }
 
 function afficherConfirmation() {
-    confirmationMessage.removeAttribute("hidden");
+    const confirmationMessage = document.getElementById("confirmationMessage"); // sélectionne le message de confirmation d'envoi
+    confirmationMessage.removeAttribute("hidden"); // affiche le message "Votre message a bien été envoyé."
 }
+
 function gererSoumissionContact(event) {
     event.preventDefault(); // empêche toujours la navigation, quel que soit le résultat
-    if (!contactForm.checkValidity()) {
-        contactForm.reportValidity(); // affiche le message natif sur le champ manquant
+    if (!formulaireValide()) { // si un champ est vide, ne contient que des espaces, ou l'email est mal formé
+        afficherErreurFormulaire(); // affiche le message d'erreur en bas du formulaire
         return; // on arrête là, pas de confirmation
     }
-    contactForm.reset();
-    afficherConfirmation();
+    masquerErreurFormulaire(); // au cas où une précédente tentative avait affiché une erreur
+    contactForm.reset(); // vide les champs du formulaire
+    afficherConfirmation(); // affiche le message de confirmation
+}
+
+function afficherErreurFormulaire() {
+    contactError.removeAttribute("hidden"); // affiche le message d'erreur
+}
+function masquerErreurFormulaire() {
+    contactError.setAttribute("hidden", ""); // cache le message d'erreur
 }
 
 function gererFormulaireContact() {
-    contactForm.addEventListener("submit", gererSoumissionContact);
+    contactForm.addEventListener("submit", gererSoumissionContact); // intercepte la soumission du formulaire
 }
 
-function main() {
+function formulaireValide() {
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const messageInput = document.getElementById("message");
+    return nameInput.value.trim() !== ""
+        && emailInput.value.trim() !== ""
+        && messageInput.value.trim() !== ""
+        && contactForm.checkValidity(); // garde la vérification native du format de l'email
+}
+
+async function main() {
     gererConnexion(); // affiche le mode édition si un token est présent
     gererModale(); // met en place les écouteurs de la modale, sans attendre les données
     gererFormulaireContact(); // met en place l'écouteur du formulaire de contact
-    Promise.all([
-        recupererDonnees("http://localhost:5678/api/works"),
-        recupererDonnees("http://localhost:5678/api/categories")
-    ]).then(([works, categories]) => { // une fois les projets et catégories récupérés
-        afficherProjets(works); // affiche les projets dans la galerie
-        afficherFiltres(categories, works); // crée les boutons de filtre par catégorie
-    })
+    const [works, categories] = await Promise.all([
+        recupererDonnees("http://localhost:5678/api/works"), // récupère la liste des projets
+        recupererDonnees("http://localhost:5678/api/categories") // récupère la liste des catégories
+    ]); // attend que les deux requêtes soient terminées
+    afficherProjets(works); // affiche les projets dans la galerie
+    afficherFiltres(categories, works); // crée les boutons de filtre par catégorie
 }
 
 document.addEventListener("DOMContentLoaded", main) // lance main() une fois le HTML chargé

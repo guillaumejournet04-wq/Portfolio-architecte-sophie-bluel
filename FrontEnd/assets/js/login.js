@@ -1,8 +1,3 @@
-const loginForm = document.getElementById("loginForm");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const errorMessage = document.getElementById("errorMessage");
-
 async function connecterUtilisateur(email, password) {
     const response = await fetch("http://localhost:5678/api/users/login", { // envoie les identifiants au serveur
         method: "POST",
@@ -15,11 +10,15 @@ async function connecterUtilisateur(email, password) {
     return response.json(); // sinon on retourne les données (userId, token)
 }
 
+
 function afficherErreur(message) {
+    const errorMessage = document.getElementById("errorMessage"); // sélectionne la zone d'affichage des erreurs
     errorMessage.textContent = message; // affiche le message d'erreur sous les champs du formulaire
 }
 
 async function gererSoumissionLogin(event) {
+    const emailInput = document.getElementById("email"); // sélectionne le champ email
+    const passwordInput = document.getElementById("password"); // sélectionne le champ mot de passe
     event.preventDefault(); // empêche le rechargement de la page par défaut du formulaire
     try {
         const data = await connecterUtilisateur(emailInput.value, passwordInput.value); // tente la connexion
@@ -31,6 +30,7 @@ async function gererSoumissionLogin(event) {
 }
 
 function main() {
+    const loginForm = document.getElementById("loginForm"); // sélectionne le formulaire de connexion
     loginForm.addEventListener("submit", gererSoumissionLogin); // déclenche la connexion à la soumission du formulaire
 }
 
