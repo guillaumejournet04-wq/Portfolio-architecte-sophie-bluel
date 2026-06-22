@@ -1,5 +1,5 @@
-const API_URL = "http://localhost:5678/api";
-const LOGIN_URL = `${API_URL}/users/login`;
+const API_URL = "http://localhost:5678/api"; // base commune à toutes les routes de l'API
+const LOGIN_URL = `${API_URL}/users/login`; // route pour se connecter et récupérer un token
 
 async function connecterUtilisateur(email, password) {
     const response = await fetch(LOGIN_URL, { // envoie les identifiants au serveur

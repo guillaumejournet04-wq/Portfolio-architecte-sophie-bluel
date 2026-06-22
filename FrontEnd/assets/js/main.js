@@ -7,9 +7,9 @@ const modal = document.getElementById("modal"); // sélectionne l'élément HTML
 const editIcon = document.getElementById("editIcon"); // sélectionne l'élément HTML de l'icône d'édition pour ouvrir le modal  
 const contactForm = document.getElementById("contactForm"); // sélectionne le formulaire de contact
 const contactError = document.getElementById("contactError"); // sélectionne le message d'erreur du formulaire de contact
-const API_URL = "http://localhost:5678/api";
-const WORKS_URL = `${API_URL}/works`;
-const CATEGORIES_URL = `${API_URL}/categories`;
+const API_URL = "http://localhost:5678/api"; // base commune à toutes les routes de l'API
+const WORKS_URL = `${API_URL}/works`; // route pour récupérer/ajouter/supprimer des projets
+const CATEGORIES_URL = `${API_URL}/categories`; // route pour récupérer les catégories
     
 
 async function recupererDonnees(url) {
@@ -47,8 +47,8 @@ function creerBoutonsCategories(category, works) {
     btn.textContent = category.name; // définit le texte du bouton avec le nom de la catégorie
     filters.appendChild(btn); // ajoute le bouton de la catégorie à la section des filtres  
     btn.addEventListener("click", () => {
-        const projetsFiltres = works.filter(work => work.categoryId === category.id);
-        afficherProjets(projetsFiltres);
+        const projetsFiltres = works.filter(work => work.categoryId === category.id); // garde uniquement les projets de cette catégorie
+        afficherProjets(projetsFiltres); // affiche cette sélection
     })
 }
 function afficherFiltres(categories, works) {
@@ -98,7 +98,7 @@ function gererModale() {
 }
 
 function fermerModaleExterieur(event) {
-    if (event.target === modal) {
+    if (event.target === modal) { // si le clic a eu lieu sur le fond et non sur le contenu de la modale
         fermerModale();
     }
 }
@@ -131,9 +131,9 @@ function gererFormulaireContact() {
 }
 
 function formulaireValide() {
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-    const messageInput = document.getElementById("message");
+    const nameInput = document.getElementById("name"); // sélectionne le champ nom
+    const emailInput = document.getElementById("email"); // sélectionne le champ email
+    const messageInput = document.getElementById("message"); // sélectionne le champ message
     return nameInput.value.trim() !== ""
         && emailInput.value.trim() !== ""
         && messageInput.value.trim() !== ""
