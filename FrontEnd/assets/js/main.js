@@ -7,9 +7,7 @@ const modal = document.getElementById("modal"); // sélectionne l'élément HTML
 const editIcon = document.getElementById("editIcon"); // sélectionne l'élément HTML de l'icône d'édition pour ouvrir le modal  
 const contactForm = document.getElementById("contactForm"); // sélectionne le formulaire de contact
 const contactError = document.getElementById("contactError"); // sélectionne le message d'erreur du formulaire de contact
-const API_URL = "http://localhost:5678/api"; // base commune à toutes les routes de l'API
-const WORKS_URL = `${API_URL}/works`; // route pour récupérer/ajouter/supprimer des projets
-const CATEGORIES_URL = `${API_URL}/categories`; // route pour récupérer les catégories
+
     
 
 async function fetchData(url) {
@@ -141,12 +139,15 @@ function isFormValid() {
 }
 
 async function main() {
+    const apiUrl = "http://localhost:5678/api"; // base commune à toutes les routes de l'API
+    const worksUrl = `${apiUrl}/works`; // route pour récupérer/ajouter/supprimer des projets
+    const categoriesUrl = `${apiUrl}/categories`; // route pour récupérer les catégories
     handleLogin(); // affiche le mode édition si un token est présent
     setupModal(); // met en place les écouteurs de la modale, sans attendre les données
     setupContactForm(); // met en place l'écouteur du formulaire de contact
     const [works, categories] = await Promise.all([
-        fetchData(WORKS_URL), // récupère la liste des projets
-        fetchData(CATEGORIES_URL) // récupère la liste des catégories
+        fetchData(worksUrl), // récupère la liste des projets
+        fetchData(categoriesUrl) // récupère la liste des catégories
     ]); // attend que les deux requêtes soient terminées
     displayWorks(works); // affiche les projets dans la galerie
     displayFilters(categories, works); // crée les boutons de filtre par catégorie
