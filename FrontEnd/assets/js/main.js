@@ -107,23 +107,20 @@ function showConfirmation() {
 function handleContactSubmit(event) {
     event.preventDefault(); // empêche toujours la navigation, quel que soit le résultat
     if (!isFormValid()) { // si un champ est vide, ne contient que des espaces, ou l'email est mal formé
-        showFormError(); // affiche le message d'erreur en bas du formulaire
+        toggleFormError(true); // affiche le message d'erreur en bas du formulaire
         return; // on arrête là, pas de confirmation
     }
-    hideFormError(); // au cas où une précédente tentative avait affiché une erreur
+    toggleFormError(false); // au cas où une précédente tentative avait affiché une erreur
     contactForm.reset(); // vide les champs du formulaire
     showConfirmation(); // affiche le message de confirmation
 }
 
-function showFormError() {
-    contactError.removeAttribute("hidden"); // affiche le message d'erreur
-}
-function hideFormError() {
-    contactError.setAttribute("hidden", ""); // cache le message d'erreur
-}
-
-function setupContactForm() {
-    contactForm.addEventListener("submit", handleContactSubmit); // intercepte la soumission du formulaire
+function toggleFormError(show) {
+    if (show) {
+        contactError.removeAttribute("hidden");
+    } else {
+        contactError.setAttribute("hidden", "");
+    }
 }
 
 function isFormValid() {
