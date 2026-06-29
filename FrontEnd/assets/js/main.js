@@ -8,8 +8,6 @@ const editIcon = document.getElementById("editIcon"); // sélectionne l'élémen
 const contactForm = document.getElementById("contactForm"); // sélectionne le formulaire de contact
 const contactError = document.getElementById("contactError"); // sélectionne le message d'erreur du formulaire de contact
 
-    
-
 async function fetchData(url) {
     const response = await fetch(url); // attend la réponse du serveur
     return response.json(); // convertit la réponse en JSON
