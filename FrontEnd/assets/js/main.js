@@ -123,6 +123,10 @@ function toggleFormError(show) {
     }
 }
 
+function setupContactForm() {
+    contactForm.addEventListener("submit", handleContactSubmit);
+}
+
 function isFormValid() {
     const nameInput = document.getElementById("name"); // sélectionne le champ nom
     const emailInput = document.getElementById("email"); // sélectionne le champ email
